@@ -114,6 +114,9 @@ div
 </template>
 
 <script>
+const xmlToJson = require("xmlToJson");
+import axios from "axios";
+
 const headers = [
   { text: "ID", value: "id" },
   { text: "Name", value: "name" },
@@ -202,64 +205,72 @@ export default {
   },
 
   methods: {
+    async fetchPersons() {
+      data = await this.$axios.$get("api/person");
+
+      return xmlToJson.parseString(data);
+    },
+
     initialize() {
-      this.persons = [
-        {
-          id: 1,
-          name: "Булочка",
-          coordinates: { x: 1, y: 1 },
-          creation_date: "17.09.21",
-          height: 170,
-          eye_color: "GREEN",
-          hair_color: "BLACK",
-          nationality: "Magic place",
-          location: { x: 1, y: 2, z: 3 }
-        },
-        {
-          id: 2,
-          name: "Пирожок",
-          coordinates: { x: 1, y: 1 },
-          creation_date: "17.09.21",
-          height: 170,
-          eye_color: "GREEN",
-          hair_color: "BLACK",
-          nationality: "Magic place",
-          location: { x: 1, y: 2, z: 3 }
-        },
-        {
-          id: 3,
-          name: "Пончик",
-          coordinates: { x: 1, y: 1 },
-          creation_date: "17.09.21",
-          height: 170,
-          eye_color: "GREEN",
-          hair_color: "BLACK",
-          nationality: "Magic place",
-          location: { x: 1, y: 2, z: 3 }
-        },
-        {
-          id: 4,
-          name: "Печенька",
-          coordinates: { x: 1, y: 1 },
-          creation_date: "17.09.21",
-          height: 170,
-          eye_color: "GREEN",
-          hair_color: "BLACK",
-          nationality: "Magic place",
-          location: { x: 1, y: 2, z: 3 }
-        },
-        {
-          id: 5,
-          name: "Мандаринка",
-          coordinates: { x: 1, y: 1 },
-          creation_date: "17.09.21",
-          height: 170,
-          eye_color: "GREEN",
-          hair_color: "BLACK",
-          nationality: "Magic place",
-          location: { x: 1, y: 2, z: 3 }
-        }
-      ];
+      this.persons = this.fetchPersons;
+
+      // this.persons = [
+      //   {
+      //     id: 1,
+      //     name: "Булочка",
+      //     coordinates: { x: 1, y: 1 },``
+      //     creation_date: "17.09.21",
+      //     height: 170,
+      //     eye_color: "GREEN",
+      //     hair_color: "BLACK",
+      //     nationality: "Magic place",
+      //     location: { x: 1, y: 2, z: 3 }
+      //   },
+      //   {
+      //     id: 2,
+      //     name: "Пирожок",
+      //     coordinates: { x: 1, y: 1 },
+      //     creation_date: "17.09.21",
+      //     height: 170,
+      //     eye_color: "GREEN",
+      //     hair_color: "BLACK",
+      //     nationality: "Magic place",
+      //     location: { x: 1, y: 2, z: 3 }
+      //   },
+      //   {
+      //     id: 3,
+      //     name: "Пончик",
+      //     coordinates: { x: 1, y: 1 },
+      //     creation_date: "17.09.21",
+      //     height: 170,
+      //     eye_color: "GREEN",
+      //     hair_color: "BLACK",
+      //     nationality: "Magic place",
+      //     location: { x: 1, y: 2, z: 3 }
+      //   },
+      //   {
+      //     id: 4,
+      //     name: "Печенька",
+      //     coordinates: { x: 1, y: 1 },
+      //     creation_date: "17.09.21",
+      //     height: 170,
+      //     eye_color: "GREEN",
+      //     hair_color: "BLACK",
+      //     nationality: "Magic place",
+      //     location: { x: 1, y: 2, z: 3 }
+      //   },
+      //   {
+      //     id: 5,
+      //     name: "Мандаринка",
+      //     coordinates: { x: 1, y: 1 },
+      //     creation_date: "17.09.21",
+      //     height: 170,
+      //     eye_color: "GREEN",
+      //     hair_color: "BLACK",
+      //     nationality: "Magic place",
+      //     location: { x: 1, y: 2, z: 3 }
+      //   }
+      // ];
 
       this.uniqueLocations = [
         { x: 1, y: 2, z: 3 },
