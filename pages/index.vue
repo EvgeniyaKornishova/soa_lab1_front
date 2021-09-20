@@ -409,7 +409,7 @@ export default {
       ];
 
       const response = await this.$axios.$get(
-        "/api/person?" +
+        "/api/persons?" +
           parameters
             .filter((param) => param.value != "")
             .map((param) => param.name + "=" + param.value)
@@ -443,7 +443,7 @@ export default {
     },
 
     async getHeightSum() {
-      const response = await this.$axios.$get("/api/calc_height");
+      const response = await this.$axios.$get("/api/persons/heights/sum");
 
       let heightSum;
       parseString(response, { explicitArray: false }, function (err, result) {
@@ -457,7 +457,7 @@ export default {
       this.getPersonAlertOn = false;
       try {
         const response = await this.$axios.$get(
-          "/api/person?id=" + this.idForGettingPerson
+          "/api/persons?id=" + this.idForGettingPerson
         );
 
         let person;
@@ -474,7 +474,7 @@ export default {
 
     async getPersonsBySubstring() {
       const response = await this.$axios.$get(
-        "/api/search_by_name?name=" + this.substring
+        "/api/persons/name/search?name=" + this.substring
       );
 
       let persons = [];
@@ -493,7 +493,7 @@ export default {
     },
 
     async getUniqueLocations() {
-      const response = await this.$axios.$get("/api/uniq_locations");
+      const response = await this.$axios.$get("/api/persons/locations/unique");
 
       let locations = [];
       parseString(response, { explicitArray: false }, function (err, result) {
@@ -557,7 +557,7 @@ export default {
     async createPerson() {
       try {
         await this.$axios.$post(
-          "/api/person",
+          "/api/persons",
           builder.buildObject({
             person: {
               name: this.editedItem.name,
@@ -583,7 +583,7 @@ export default {
     async updatePerson() {
       try {
         await this.$axios.$put(
-          "/api/person?id=" + this.persons[this.editedIndex].id,
+          "/api/persons?id=" + this.persons[this.editedIndex].id,
           builder.buildObject({
             person: {
               name: this.editedItem.name,
@@ -604,7 +604,7 @@ export default {
 
     async deletePerson() {
       await this.$axios.$delete(
-        "/api/person?id=" + this.persons[this.editedIndex].id
+        "/api/persons?id=" + this.persons[this.editedIndex].id
       );
     },
 
