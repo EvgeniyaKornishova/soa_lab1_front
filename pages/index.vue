@@ -166,12 +166,12 @@ div
     )
     v-text-field(
       :value="itemsPerPage",
+      v-model="vItemsPerPage",
       label="Items per page",
       type="number",
-      min="0",
+      min="1",
       max="15",
-      @input="itemsPerPage = parseInt($event, 10)",
-      @change="initialize"
+      @change="paginationUpdate($event)"
     )
   //- Выбор объектов, поля name которых содержат указанную подстроку
   v-card.mb-5
@@ -298,6 +298,7 @@ export default {
       page: 1,
       pageCount: 1,
       itemsPerPage: 10,
+      vItemsPerPage: 10,
       currentSort: "id",
       itemsCount: 0,
       getPersonAlertOn: false,
@@ -390,7 +391,6 @@ export default {
   methods: {
     async initialize() {
       this.recountPages();
-
       let parameters = [
         { name: "page_id", value: this.page },
         { name: "page_size", value: this.itemsPerPage },
@@ -508,6 +508,18 @@ export default {
       });
 
       this.uniqueLocations = locations;
+    },
+    async paginationUpdate(sItemsPerPage){
+      let ipp = parseInt(sItemsPerPage, 10);
+      if (isNaN(ipp) || ipp < 1){
+        this.itemsPerPage = 1;
+      }else{
+        this.itemsPerPage = ipp;
+      }
+      this.vItemsPerPage = this.itemsPerPage;
+
+      await this.initialize();
+
     },
 
     editItem(item) {
