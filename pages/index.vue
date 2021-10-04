@@ -272,14 +272,16 @@ const headers = [
   { text: "Hair color", value: "hairColor" },
   { text: "Nationality", value: "nationality" },
   { text: "Location", value: "location" },
-  { text: "", value: "actions" },
+  { text: "", value: "actions" }
 ];
 
 const locationHeaders = [
   { text: "X", value: "x" },
   { text: "Y", value: "y" },
-  { text: "Z", value: "z" },
+  { text: "Z", value: "z" }
 ];
+
+export const URL_BASE = "http://localhost:8080/SOA_lab1-1.0-SNAPSHOT";
 
 export default {
   data() {
@@ -303,12 +305,8 @@ export default {
       itemsCount: 0,
       getPersonAlertOn: false,
       tableAlertOn: false,
-      availableColors: [
-        "GREEN", "WHITE", "BLACK", "YELLOW", "ORANGE"
-      ],
-      availableCountries: [
-        "INDIA", "VATICAN", "NORTH_KOREA", "JAPAN"
-      ],
+      availableColors: ["GREEN", "WHITE", "BLACK", "YELLOW", "ORANGE"],
+      availableCountries: ["INDIA", "VATICAN", "NORTH_KOREA", "JAPAN"],
       sortItems: [
         "id",
         "name",
@@ -321,7 +319,7 @@ export default {
         "coordinates_y",
         "location_x",
         "location_y",
-        "location_z",
+        "location_z"
       ],
       filter: {
         name: "",
@@ -331,7 +329,7 @@ export default {
         eyeColor: "",
         hairColor: "",
         nationality: "",
-        location: { x: "", y: "", z: "" },
+        location: { x: "", y: "", z: "" }
       },
       editedItem: {
         id: "",
@@ -342,7 +340,7 @@ export default {
         eyeColor: "",
         hairColor: "",
         nationality: "",
-        location: { x: "", y: "", z: "" },
+        location: { x: "", y: "", z: "" }
       },
       defaultItem: {
         id: "",
@@ -353,7 +351,7 @@ export default {
         eyeColor: "",
         hairColor: "",
         nationality: "",
-        location: { x: "", y: "", z: "" },
+        location: { x: "", y: "", z: "" }
       },
       itemByID: {
         id: null,
@@ -364,15 +362,15 @@ export default {
         eyeColor: null,
         hairColor: null,
         nationality: null,
-        location: { x: null, y: null, z: null },
-      },
+        location: { x: null, y: null, z: null }
+      }
     };
   },
 
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    },
+    }
   },
 
   watch: {
@@ -381,7 +379,7 @@ export default {
     },
     dialogDelete(val) {
       val || this.closeDelete();
-    },
+    }
   },
 
   async created() {
@@ -405,14 +403,14 @@ export default {
         { name: "location_y", value: this.filter.location.y },
         { name: "location_z", value: this.filter.location.z },
         { name: "coordinates_x", value: this.filter.coordinates.x },
-        { name: "coordinates_y", value: this.filter.coordinates.y },
+        { name: "coordinates_y", value: this.filter.coordinates.y }
       ];
 
       const response = await this.$axios.$get(
-        "/api/persons?" +
+        `${URL_BASE}/persons?` +
           parameters
-            .filter((param) => param.value != "")
-            .map((param) => param.name + "=" + param.value)
+            .filter(param => param.value != "")
+            .map(param => param.name + "=" + param.value)
             .join("&")
       );
 
@@ -421,7 +419,7 @@ export default {
 
       let persons = [];
       let count = 0;
-      parseString(response, { explicitArray: false }, function (err, result) {
+      parseString(response, { explicitArray: false }, function(err, result) {
         count = result.persons.$.count;
         let recv_count = Math.min(
           Math.max(count - (page - 1) * itemsPerPage, 0),
@@ -436,17 +434,18 @@ export default {
         }
       });
 
-
       this.itemsCount = count;
       this.persons = persons;
       this.recountPages();
     },
 
     async getHeightSum() {
-      const response = await this.$axios.$get("/api/persons/heights/sum");
+      const response = await this.$axios.$get(
+        `${URL_BASE}/persons/heights/sum`
+      );
 
       let heightSum;
-      parseString(response, { explicitArray: false }, function (err, result) {
+      parseString(response, { explicitArray: false }, function(err, result) {
         heightSum = result.server_response.body._;
       });
 
@@ -457,11 +456,11 @@ export default {
       this.getPersonAlertOn = false;
       try {
         const response = await this.$axios.$get(
-          "/api/persons?id=" + this.idForGettingPerson
+          `${URL_BASE}/persons?id=` + this.idForGettingPerson
         );
 
         let person;
-        parseString(response, { explicitArray: false }, function (err, result) {
+        parseString(response, { explicitArray: false }, function(err, result) {
           person = result.person;
         });
 
@@ -474,11 +473,11 @@ export default {
 
     async getPersonsBySubstring() {
       const response = await this.$axios.$get(
-        "/api/persons/name/search?name=" + this.substring
+        `${URL_BASE}/persons/name/search?name=` + this.substring
       );
 
       let persons = [];
-      parseString(response, { explicitArray: false }, function (err, result) {
+      parseString(response, { explicitArray: false }, function(err, result) {
         if (result.persons != "") {
           // returned empty list
           if (result.persons.item.constructor === Array) {
@@ -493,10 +492,12 @@ export default {
     },
 
     async getUniqueLocations() {
-      const response = await this.$axios.$get("/api/persons/locations/unique");
+      const response = await this.$axios.$get(
+        `${URL_BASE}/persons/locations/unique`
+      );
 
       let locations = [];
-      parseString(response, { explicitArray: false }, function (err, result) {
+      parseString(response, { explicitArray: false }, function(err, result) {
         if (result.locations != "") {
           // returned empty list
           if (result.locations.item.constructor === Array) {
@@ -509,17 +510,16 @@ export default {
 
       this.uniqueLocations = locations;
     },
-    async paginationUpdate(sItemsPerPage){
+    async paginationUpdate(sItemsPerPage) {
       let ipp = parseInt(sItemsPerPage, 10);
-      if (isNaN(ipp) || ipp < 1){
+      if (isNaN(ipp) || ipp < 1) {
         this.itemsPerPage = 1;
-      }else{
+      } else {
         this.itemsPerPage = ipp;
       }
       this.vItemsPerPage = this.itemsPerPage;
 
       await this.initialize();
-
     },
 
     editItem(item) {
@@ -557,7 +557,7 @@ export default {
     async createPerson() {
       try {
         await this.$axios.$post(
-          "/api/persons",
+          `${URL_BASE}/persons`,
           builder.buildObject({
             person: {
               name: this.editedItem.name,
@@ -566,13 +566,16 @@ export default {
               hairColor: this.editedItem.hairColor.toUpperCase(),
               nationality: this.editedItem.nationality.toUpperCase(),
               coordinates: this.editedItem.coordinates,
-              location: this.editedItem.location,
-            },
+              location: this.editedItem.location
+            }
           })
         );
       } catch (error) {
         let json_error = "";
-        parseString(error.response.data, {explicitArray: false}, function (err, result) {
+        parseString(error.response.data, { explicitArray: false }, function(
+          err,
+          result
+        ) {
           json_error = result;
         });
         this.error = json_error;
@@ -583,7 +586,7 @@ export default {
     async updatePerson() {
       try {
         await this.$axios.$put(
-          "/api/persons?id=" + this.persons[this.editedIndex].id,
+          `${URL_BASE}/persons?id=` + this.persons[this.editedIndex].id,
           builder.buildObject({
             person: {
               name: this.editedItem.name,
@@ -592,8 +595,8 @@ export default {
               hairColor: this.editedItem.hairColor.toUpperCase(),
               nationality: this.editedItem.nationality.toUpperCase(),
               coordinates: this.editedItem.coordinates,
-              location: this.editedItem.location,
-            },
+              location: this.editedItem.location
+            }
           })
         );
       } catch (error) {
@@ -604,7 +607,7 @@ export default {
 
     async deletePerson() {
       await this.$axios.$delete(
-        "/api/persons?id=" + this.persons[this.editedIndex].id
+        `${URL_BASE}/persons?id=` + this.persons[this.editedIndex].id
       );
     },
 
@@ -633,16 +636,19 @@ export default {
         eyeColor: "",
         hairColor: "",
         nationality: "",
-        location: { x: "", y: "", z: "" },
+        location: { x: "", y: "", z: "" }
       };
 
       await this.initialize();
     },
 
     recountPages() {
-      this.pageCount = Math.max(Math.ceil(this.itemsCount / this.itemsPerPage), 1);
+      this.pageCount = Math.max(
+        Math.ceil(this.itemsCount / this.itemsPerPage),
+        1
+      );
       this.page = Math.min(this.page, this.pageCount);
-    },
-  },
+    }
+  }
 };
 </script>

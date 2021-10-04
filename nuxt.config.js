@@ -16,7 +16,7 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/SOA_lab1-1.0-SNAPSHOT/favicon.ico' },
     ]
   },
 
@@ -43,22 +43,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
-    '@nuxtjs/proxy'
   ],
-
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    proxy: true
-  },
-
-  proxy: {
-    "/api": {
-      target: "http://localhost:8080",
-      changeOrigin: true,
-      pathRewrite: { "^/api": "" },
-      logLevel: "debug",
-    },
-  },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -79,12 +64,18 @@ export default {
     }
   },
 
+  router: {
+    base: '/SOA_lab1-1.0-SNAPSHOT/',
+  },
+
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    extend: function (config, { isDev, isClient }) {
-      config.node = {
-        fs: "empty"
-      };
-    }
+    publicPath: 'http://localhost:8080/SOA_lab1-1.0-SNAPSHOT/',
+    extend(config, ctx) {}
+    // extend: function (config, { isDev, isClient }) {
+    //   config.node = {
+    //     fs: "empty"
+    //   };
+    // }
   }
 }

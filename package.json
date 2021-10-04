@@ -1,6 +1,7 @@
 {
   "name": "soa_lab1_front",
   "version": "1.0.0",
+  "homepage": "./",
   "private": true,
   "scripts": {
     "dev": "nuxt",
