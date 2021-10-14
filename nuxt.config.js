@@ -70,7 +70,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-    publicPath: 'http://localhost:8080/SOA_lab1-1.0-SNAPSHOT/',
+    publicPath: 'http://localhost:10080/SOA_lab1-1.0-SNAPSHOT/',
     extend(config, ctx) {}
     // extend: function (config, { isDev, isClient }) {
     //   config.node = {

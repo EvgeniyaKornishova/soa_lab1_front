@@ -281,7 +281,7 @@ const locationHeaders = [
   { text: "Z", value: "z" }
 ];
 
-export const URL_BASE = "http://localhost:8080/SOA_lab1-1.0-SNAPSHOT";
+export const URL_BASE = "http://localhost:10080/SOA_lab1-1.0-SNAPSHOT";
 
 export default {
   data() {
@@ -414,25 +414,20 @@ export default {
             .join("&")
       );
 
-      let itemsPerPage = this.itemsPerPage;
-      let page = this.page;
 
       let persons = [];
       let count = 0;
       parseString(response, { explicitArray: false }, function(err, result) {
         count = result.persons.$.count;
-        let recv_count = Math.min(
-          Math.max(count - (page - 1) * itemsPerPage, 0),
-          itemsPerPage
-        );
-        if (recv_count != 0) {
-          if (recv_count > 1) {
+        if (typeof result.persons.person !== 'undefined'){
+          if (result.persons.person.constructor === Array) {
             persons = result.persons.person; // returned more than one value
           } else {
             persons.push(result.persons.person); // returned one value
           }
         }
-      });
+      }
+      );
 
       this.itemsCount = count;
       this.persons = persons;
@@ -456,7 +451,7 @@ export default {
       this.getPersonAlertOn = false;
       try {
         const response = await this.$axios.$get(
-          `${URL_BASE}/persons?id=` + this.idForGettingPerson
+          `${URL_BASE}/persons/` + this.idForGettingPerson
         );
 
         let person;
@@ -466,14 +461,13 @@ export default {
 
         this.itemByID = person;
       } catch (error) {
-        this.error = error.response.data;
         this.getPersonAlertOn = true;
       }
     },
 
     async getPersonsBySubstring() {
       const response = await this.$axios.$get(
-        `${URL_BASE}/persons/name/search?name=` + this.substring
+        `${URL_BASE}/persons/names/search?name=` + this.substring
       );
 
       let persons = [];
@@ -493,7 +487,7 @@ export default {
 
     async getUniqueLocations() {
       const response = await this.$axios.$get(
-        `${URL_BASE}/persons/locations/unique`
+        `${URL_BASE}/persons/locations/uniq`
       );
 
       let locations = [];
@@ -586,7 +580,7 @@ export default {
     async updatePerson() {
       try {
         await this.$axios.$put(
-          `${URL_BASE}/persons?id=` + this.persons[this.editedIndex].id,
+          `${URL_BASE}/persons/` + this.persons[this.editedIndex].id,
           builder.buildObject({
             person: {
               name: this.editedItem.name,
@@ -607,13 +601,14 @@ export default {
 
     async deletePerson() {
       await this.$axios.$delete(
-        `${URL_BASE}/persons?id=` + this.persons[this.editedIndex].id
+        `${URL_BASE}/persons/` + this.persons[this.editedIndex].id
       );
     },
 
     async save() {
       this.tableAlertOn = false;
       if (this.editedIndex > -1) {
+        this.editedItem.id = this.persons[this.editedItem].id;
         Object.assign(this.persons[this.editedIndex], this.editedItem);
         await this.updatePerson();
       } else {
