@@ -414,20 +414,18 @@ export default {
             .join("&")
       );
 
-
       let persons = [];
       let count = 0;
       parseString(response, { explicitArray: false }, function(err, result) {
         count = result.persons.$.count;
-        if (typeof result.persons.person !== 'undefined'){
+        if (typeof result.persons.person !== "undefined") {
           if (result.persons.person.constructor === Array) {
             persons = result.persons.person; // returned more than one value
           } else {
             persons.push(result.persons.person); // returned one value
           }
         }
-      }
-      );
+      });
 
       this.itemsCount = count;
       this.persons = persons;

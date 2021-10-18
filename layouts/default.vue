@@ -1,37 +1,30 @@
-<template>
-  <v-app dark>
-    <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
-    </v-main>
-  </v-app>
+<template lang="pug">
+  v-app(dark)
+    v-main
+      v-app-bar
+        v-app-bar-nav-icon(@click.stop="drawer = !drawer")
+        v-toolbar-title Service oriented architecture
+      v-container
+        v-navigation-drawer(v-model="drawer" absolute bottom temporary)
+          v-list(nav dense)
+            v-list-item-group(v-model="group")
+              v-list-item(to="/") lab_1
+              v-list-item(to="/lab_2") lab_2
+        Nuxt
 </template>
 
 <script>
 export default {
   data() {
     return {
-      clipped: false,
       drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: "mdi-apps",
-          title: "Welcome",
-          to: "/"
-        },
-        {
-          icon: "mdi-chart-bubble",
-          title: "Inspire",
-          to: "/inspire"
-        }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: "Vuetify.js"
+      group: null
     };
+  },
+  watch: {
+    group() {
+      this.drawer = false;
+    }
   }
 };
 </script>
